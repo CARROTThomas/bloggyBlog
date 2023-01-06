@@ -1,47 +1,46 @@
 <?php
-$titleEdit = "";
-$contentEdit = "";
-$id = $_POST['id'];
-echo $id;
+
+require_once ('pdo.php');
+
+$title = null;
+$content = null;
+$id = null;
+
+if (!empty($_GET['id']) && ctype_digit($_GET['id']))
+{
+    $id = $_GET['id'];
+}
 if( !empty($_POST['titleEdit']) ){
-    $titleEdit = $_POST['titleEdit'];
+    $title = $_POST['titleEdit'];
 }
 if( !empty($_POST['contentEdit']) ){
-    $contentEdit = $_POST['contentEdit'];
+    $content = $_POST['contentEdit'];
 }
-if ($titleEdit && $contentEdit) {
-    $adresseServeurMySQL = "localhost";
-    $nomDeDatabase = "blog";
-    $username = "blogger";
-    $password = "thomas123";
 
-    $pdo = new PDO("mysql:host=$adresseServeurMySQL;dbname=$nomDeDatabase",
-        $username,
-        $password,
-        [
-            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-            PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC
-        ]
-    );
 
-    $requestDelete = $pdo->prepare('UPDATE posts SET 
-             title = :title, 
-             content = :content
-             WHERE id= :id'
-    );
+if ($id)
+{
+    $request = $pdo->prepare('SELECT * FROM posts WHERE id= :id');
+    $request->execute([
+            "id"=>$id
+    ]);
 
+    $post = $request->fetch();
+    if(!$post){
+        header("Location: index.php");
+    }
+
+}
+
+if ($title && $content) {
+    $requestDelete = $pdo->prepare("UPDATE posts SET title = :title, content = :content WHERE posts.id = :id");
     $requestDelete->execute([
-        "title" => $titleEdit,
-        "content" => $contentEdit,
+        "title" => $title,
+        "content" => $content,
         "id" => $id
     ]);
     header('Location: index.php');
 }
-
-$request = $pdo->query("SELECT * FROM posts");
-$post = $request->fetchAll();
-
-echo $post;
 
 ?>
 <!doctype html>
@@ -57,7 +56,7 @@ echo $post;
 <header>
     <nav class="navbar navbar-expand-lg bg-dark">
         <div class="container d-flex align-items-center justify-content-between">
-            <a id="logo" class="navbar-brand text-light" href="#">LOGO</a>
+            <a id="logo" class="navbar-brand text-light" href="index.php">LOGO</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
@@ -67,10 +66,7 @@ echo $post;
                         <a class="nav-link text-success" href="index.php">Home</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-light" href="createPost.php">CreatePost</a>
-                    </li>
-                    <li>
-                        <a class="nav-link text-danger" href="#">Lien</a>
+                        <a class="nav-link text-primary" href="createPost.php">CreatePost</a>
                     </li>
                 </ul>
             </div>
@@ -91,9 +87,9 @@ echo $post;
         <h1 class="mt-5">Edit Msg</h1>
         <div>
             <form class="d-flex flex-column align-items-center" action="" method="post">
-                <input type="text" name="titleEdit" value="" placeholder="NEW Title">
-                <input type="text" name="contentEdit" value="" placeholder="NEW Content">
-                <input type="submit" value="SEND">
+                <input type="text" name="titleEdit" value="<?= $post['title'] ?>" placeholder="NEW Title">
+                <input type="text" name="contentEdit" value="<?= $post['content'] ?>" placeholder="NEW Content">
+                <input type="submit" value="MODIFIER">
             </form>
         </div>
     </div>

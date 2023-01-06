@@ -31,7 +31,7 @@ $posts = $request->fetchAll();
 <header>
     <nav class="navbar navbar-expand-lg bg-dark">
         <div class="container d-flex align-items-center justify-content-between">
-            <a id="logo" class="navbar-brand text-light" href="#">LOGO</a>
+            <a id="logo" class="navbar-brand text-light" href="index.php">LOGO</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
@@ -41,10 +41,7 @@ $posts = $request->fetchAll();
                         <a class="nav-link text-success" href="index.php">Home</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-light" href="createPost.php">CreatePost</a>
-                    </li>
-                    <li>
-                        <a class="nav-link text-danger" href="#">Lien</a>
+                        <a class="nav-link text-primary" href="createPost.php">CreatePost</a>
                     </li>
                 </ul>
             </div>
@@ -59,14 +56,7 @@ $posts = $request->fetchAll();
                 <h3><?= $post["title"] ?></h3>
                 <p><?= $post["content"] ?></p>
             </div>
-            <div class="d-flex flex-column">
-                <form action="delete-post.php" method="post">
-                    <button class="btn border m-1"><input type="hidden" name="id" value="<?= $post['id']?>">delete</button>
-                </form>
-                <form action="update-post.php" method="post">
-                    <button class="btn border m-1"><input type="hidden" name="id" value="<?= $post['id']?>">Edit</button>
-                </form>
-            </div>
+            <a href="post.php?id=<?= $post['id'] ?>" class="btn">Voir +</a>
         </div>
     <?php endforeach; ?>
 </div>

@@ -1,53 +1,38 @@
 <?php
-//faire tout le nécéssaire pour récupérer le contenu de l'article depuis $_POST
-//et le sauvegarder dans la DB à l'aide de PDO
 
-$title = "";
-$content = "";
+$id =null;
 
-if( !empty($_POST['title']) ){
-    $title = $_POST['title'];
-}
-if( !empty($_POST['content']) ){
-    $content = $_POST['content'];
+if (!empty($_GET['id']) && ctype_digit($_GET['id']))
+{
+    $id = $_GET['id'];
 }
 
-if ($title && $content) {
-    $adresseServeurMySQL = "localhost";
-    $nomDeDatabase = "blog";
-    $username = "blogger";
-    $password = "thomas123";
+if ($id)
+{
+    require_once('pdo.php');
 
-    $pdo = new PDO("mysql:host=$adresseServeurMySQL;dbname=$nomDeDatabase",
-        $username,
-        $password,
-        [
-            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-            PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC
-        ]
-    );
-
-    $request = $pdo->prepare('INSERT INTO posts SET title = :title, content= :content');
+    $request = $pdo->prepare('SELECT * FROM posts WHERE id= :id');
     $request->execute([
-       "title"=> $title,
-       "content"=> $content
+       "id" => $id
     ]);
-    header('Location: index.php');
-}
-?>
+    $post = $request->fetch();
 
+    if (!$post) {header('Location: index.php');} // Post introuvable
+}
+
+
+?>
 <!doctype html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>ALED</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css">
 </head>
 <body>
-
 <header>
     <nav class="navbar navbar-expand-lg bg-dark">
         <div class="container d-flex align-items-center justify-content-between">
@@ -69,11 +54,24 @@ if ($title && $content) {
     </nav>
 </header> <!-- BAR DE NAVIGATION-->
 
+
 <div class="container mt-5">
-    <h1>nouveau post</h1>
-    <form action="" method="post">
-        <input type="text" name="title" id="">
-        <input type="text" name="content" id="">
-        <input type="submit" value="Envoyer">
-    </form>
+    <a href="index.php" class="btn d-flex align-items-center m-3"><span class="material-symbols-outlined">keyboard_arrow_left</span>Retour</a>
+
+    <div class="d-flex justify-content-between border">
+        <div class="d-flex flex-column m-1">
+            <h3><?= $post["title"] ?></h3>
+            <p><?= $post["content"] ?></p>
+        </div>
+        <div class="d-flex flex-column">
+            <a href="delete-post.php?id=<?= $post['id'] ?>" class="btn border m-1">Delete</a>
+            <a href="update-post.php?id=<?= $post['id'] ?>" class="btn border m-1">Update</a>
+        </div>
+    </div>
 </div>
+
+</div>
+</body>
+</html>
+
+

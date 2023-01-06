@@ -39,7 +39,7 @@ if ($title && $content) {
         "content" => $content,
         "id" => $id
     ]);
-    header('Location: index.php');
+    header('Location: post.php?id='.$id);
 }
 
 

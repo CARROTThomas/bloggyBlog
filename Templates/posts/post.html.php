@@ -14,10 +14,15 @@
 
 
     <div class="d-flex flex-column mt-3">
+        <h4>Create Comment :</h4>
+
         <h4>Comments :</h4>
         <?php foreach ($comments as $comment) : ?>
-            <div class="d-flex align-items-center border mt-3">
+            <div class="d-flex align-items-center justify-content-between border mt-3">
                 <p class="m-1"><?= $comment["comment"] ?></p>
+                <div>
+                    <a href="delete-comment.php?id=<?= $comment['id']?>" class="btn d-flex align-items-center border m-1"><span class="material-symbols-outlined">delete</span>Delete</a>
+                </div>
             </div>
         <?php endforeach; ?>
     </div>

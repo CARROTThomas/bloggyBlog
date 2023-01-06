@@ -15,4 +15,15 @@ $requestDelete->execute([
 ]);
 
 header('Location: index.php');
+
+
+
+
+
+ob_start();
+require_once ('templates/posts/index.html.php');
+
+$pageContent = ob_get_clean();
+
+require_once ('templates/base.html.php');
 ?>

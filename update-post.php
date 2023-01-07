@@ -1,6 +1,7 @@
 <?php
 
 require_once ('pdo.php');
+require_once ('librairie/tools.php');
 
 $title = null;
 $content = null;
@@ -27,7 +28,7 @@ if ($id)
 
     $post = $request->fetch();
     if(!$post){
-        header("Location: index.php");
+        redirect("index.php");
     }
 
 }
@@ -39,16 +40,11 @@ if ($title && $content) {
         "content" => $content,
         "id" => $id
     ]);
-    header('Location: post.php?id='.$id);
+    redirect("post.php?id=${id}");
 }
 
-
-
-
-ob_start();
-require_once ('templates/posts/update.html.php');
-
-$pageContent = ob_get_clean();
-
-require_once ('templates/base.html.php');
+render("posts/update", [
+    "post"=>$post,
+    "pageTitle"=>"Update le Post"
+]);
 ?>

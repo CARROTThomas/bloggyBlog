@@ -1,4 +1,5 @@
 <?php
+require_once ('librairie/tools.php');
 
 $id = null;
 if (!empty($_GET['id']) && ctype_digit($_GET['id']))
@@ -14,8 +15,5 @@ $requestDelete->execute([
     "id"=>$id
 ]);
 
-
-header('Location: post.php');
-
-
+redirect("post.php");
 ?>

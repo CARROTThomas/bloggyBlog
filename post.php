@@ -1,4 +1,5 @@
 <?php
+require_once ('librairie/tools.php');
 
 $id =null;
 
@@ -28,14 +29,15 @@ if ($id)
 
 
 
-    if (!$post) {header('Location: index.php');} // Post introuvable
+    if (!$post) {
+        redirect("index.php");
+    } // Post introuvable
 }
 
-
-ob_start();
-require_once ('templates/posts/post.html.php');
-
-$pageContent = ob_get_clean();
-
-require_once ('templates/base.html.php');
+// transmettre les variables à la page posts/post.html.php = template
+render("posts/post", [
+    "post"=>$post,
+    "comments"=>$comments,
+    "pageTitle"=>"Un post"
+]);
 ?>

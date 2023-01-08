@@ -15,5 +15,7 @@ $requestDelete->execute([
     "id"=>$id
 ]);
 
-redirect("post.php");
+//redirect("post.php");
+redirect("post.php?id=${id}");
+
 ?>

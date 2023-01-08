@@ -1,3 +1,5 @@
+<h2 class="text-underline">Article :</h2>
+
 <?php foreach ($posts as $post) :  ?>
     <div class="post d-flex align-items-center justify-content-between border mt-3">
         <div class="d-flex flex-column m-1">
